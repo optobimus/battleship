@@ -1,9 +1,9 @@
 const Gameboard = () => {
     const board = new Array(10).fill(null).map(() => new Array(10).fill(null));
-    const hitBoard = new Array(10).fill(null).map(() => new Array(10).fill(null));
+    const hitBoard = new Array(10).fill(false).map(() => new Array(10).fill(false));
     const ships = [];
 
-    const attacks = 0, missedAttacks = 0;
+    let attacks = 0, missedAttacks = 0;
     function placeShip(ship, position, isHorizontal) {
 
         if (!canPlaceShip(ship, position, isHorizontal)) {
@@ -28,8 +28,11 @@ const Gameboard = () => {
 
     function receiveAttack(position) {
         let { row, col } = position;
-        if (board[row][col] !== null && hitBoard[row][col] === null) {
-            board[row][col].hit();
+        if (board[row][col] !== null && hitBoard[row][col] === false) {
+            ships.forEach((ship) => {
+                if (ship === board[row][col])
+                    ship.hit();
+            })
         } else
             missedAttacks++;
 
@@ -55,17 +58,18 @@ const Gameboard = () => {
     }
     
     function gameOver() {
-        ships.forEach((ship) => {
-            if (!ship.isSunk()) {
+        for (let i = 0; i < ships.length; i++) {
+            if (!ships[i].isSunk()) {
                 return false;
             }
-        })
+        }
         return true;
     }
 
     const getBoard = () => board;
+    const getHitBoard = () => hitBoard;
 
-    return { placeShip, receiveAttack, gameOver, getBoard, canPlaceShip }
+    return { placeShip, receiveAttack, gameOver, getBoard, canPlaceShip, getHitBoard }
 }
 
 export default Gameboard;

@@ -2,7 +2,7 @@ import css from './styles.css';
 import Player from './factories/player';
 import Gameboard from './factories/gameboard';
 import Ship from './factories/ship';
-import { createGame }  from './dom'
+import { createGame, placeShips, placeShip }  from './dom'
 
 function initialize(name) {
     // Create Player

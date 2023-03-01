@@ -1,10 +1,11 @@
 function createGame() {
     const main = document.querySelector(".main");
     main.innerHTML = "";
-    placeShips(main);
+    createInitLayout(main);
+    placeShips();
 }
 
-function placeShips(main) {
+function createInitLayout(main) {
     const instructionText = document.createElement("h1");
     instructionText.classList.add("instruction-text");
     const axisButton = document.createElement("button");
@@ -28,59 +29,80 @@ function placeShips(main) {
     main.appendChild(axisButton);
     main.appendChild(board);
 
-    placeShip("Carrier", instructionText);
-    placeShip("Battleship", instructionText);
-    placeShip("Destroyer", instructionText);
-    placeShip("Submarine", instructionText);
-    placeShip("Patrol Boat", instructionText);
+    axisButton.addEventListener("click", () => {
+        if (axisButton.textContent === "AXIS: X") {
+            axisButton.textContent = "AXIS: Y";
+            isHorizontal = false;
+        } else {
+            axisButton.textContent = "AXIS: X";
+            isHorizontal = true;
+        }
+    });
 
 }
 
-function placeShip(type, text) {
-    text.textContent = "Place your " + type;
-    let length = 0;
+async function placeShips() {
+ 
+    await placeShip("Carrier", 5);
+    await placeShip("Battleship", 4);
+    await placeShip("Destroyer", 3);
+    await placeShip("Submarine", 3);
+    await placeShip("Patrol Boat", 2);
 
-    switch (type) {
-        case "Carrier":
-            length = 5;
+}
 
-            break;
-        case "Battleship":
-            length = 4;
+function placeShip(type, length) {
+    const text = document.querySelector(".instruction-text");
+    return new Promise((resolve, reject) => {
+        text.textContent = "Place your " + type;
 
-            break;
-        case "Destroyer":
-            length = 3;
+        const fields = document.querySelectorAll(".field");
+        fields.forEach(field => {
 
-            break;
-        case "Submarine":
-            length = 3;
+            highlightPotentialShip(fields, field, length);
+            field.addEventListener("click", () => {
+                resolve();
+            });
+            field.style.backgroundColor = "#124459";
+        });
 
-            break;
-        case "Patrol Boat":
-            length = 2;
-
-            break;
-    }
-
-    const fields = document.querySelectorAll(".field");
-    fields.forEach(field => {
-        field.addEventListener(("hover"), () => {
-            if (isHorizontal) {
-                for (let i = 0; i < length; i++) {
-                    fields.forEach(field => {
-                        if (field.dataset.positionX === i) {
-                            field.style.backgroundColor = "#EFF6E0";
-                        }
-                    })
-                }
-            }
-        })
+        
     });
+}
+
+function highlightPotentialShip(fields, field, length) {
+
+    field.addEventListener("mouseover", () => {
+if (isHorizontal) {
+        for (let i = 0; i < length; i++) {
+            console.log(length);
+            fields.forEach(fieldToChange => {
+                if (fieldToChange.dataset.positionx === field.dataset.positionx 
+                    && parseInt(fieldToChange.dataset.positiony) === parseInt(field.dataset.positiony) + i) {
+                    fieldToChange.style.backgroundColor = "#EFF6E0";
+                }
+            });
+        }
+    } else {
+        for (let i = 0; i < length; i++) {
+            fields.forEach(fieldToChange => {
+                if (fieldToChange.dataset.positiony === field.dataset.positiony 
+                    && parseInt(fieldToChange.dataset.positionx) === parseInt(field.dataset.positionx) + i) {
+                    fieldToChange.style.backgroundColor = "#EFF6E0";
+                }
+            });
+        }
+    }
+    field.addEventListener("click", () => {
+        return;
+    });
+    });
+    
+    return;
 }
 
 
 
 let isHorizontal = true;
 
-export { createGame }
+export { createGame, placeShips, placeShip }

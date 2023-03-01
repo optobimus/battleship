@@ -1,0 +1,117 @@
+body {
+    height: 100vh;
+    width: 100%;
+    background-color: #124559;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #EFF6E0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+    padding: 20px;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.board {
+    width: 500px;
+    height: 500px;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 3px;
+}
+
+.field {
+    border: 1px solid #EFF6E0;
+}
+
+.field:hover {
+    background-color: #EFF6E0;
+}
+
+
+
+input[type="text"] {
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f7f7f7;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+input[type="text"]:focus {
+  border-color: #66afe9;
+  box-shadow: 0 0 5px rgba(102, 175, 233, 0.5);
+}
+
+button {
+  display: inline-block;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #598392;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #4c6d7e;
+}
+
+button:active {
+  background-color: #2f4d5b;
+  box-shadow: none;
+}
+
+
+a img {
+    filter: drop-shadow(0 0 0 white) invert(100%);
+}
+
+a img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+a:hover img {
+    animation: spin 0.5s linear;
+    animation-fill-mode: forwards;
+    transform: scale(1.2);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg) scale(1.2); }
+}
+
+
+footer {
+    height: 40px;
+    background-color: #333333;
+    display: flex;
+    justify-content: center;
+    color: white;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}

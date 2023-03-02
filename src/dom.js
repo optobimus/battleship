@@ -5,10 +5,6 @@ function createGame() {
     placeShips();
 }
 
-function clearMain() {
-    
-}
-
 function createInitLayout(main) {
     const instructionText = document.createElement("h1");
     instructionText.classList.add("instruction-text");
@@ -19,8 +15,6 @@ function createInitLayout(main) {
     board.classList.add("board");
 
     createBoard(board);
-
-   
 
     main.appendChild(instructionText);
     main.appendChild(axisButton);
@@ -56,46 +50,56 @@ function placeShip(type, length) {
         text.textContent = "Place your " + type;
 
         const fields = document.querySelectorAll(".field");
-        fields.forEach(field => {
 
-            highlightPotentialShip(fields, field, length);
-            field.addEventListener("click", () => {
-                resolve();
-            });
-            field.style.backgroundColor = "#124459";
-        });
-
+        const mouseoverHandler = (event) => {
+            if (isHorizontal) {
+                for (let i = 0; i < length; i++) {
+                    fields.forEach(fieldToChange => {
+                        if (fieldToChange.dataset.positionx === event.target.dataset.positionx 
+                            && parseInt(fieldToChange.dataset.positiony) === parseInt(event.target.dataset.positiony) + i) {
+                            fieldToChange.style.backgroundColor = "#EFF6E0";
+                        }
+                    });
+                }
+            } else {
+                for (let i = 0; i < length; i++) {
+                    fields.forEach(fieldToChange => {
+                        if (fieldToChange.dataset.positiony === event.target.dataset.positiony 
+                            && parseInt(fieldToChange.dataset.positionx) === parseInt(event.target.dataset.positionx) + i) {
+                            fieldToChange.style.backgroundColor = "#EFF6E0";
+                        }
+                    });
+                }
+            }
+        };
         
+        const clickHandler = (event) => {
+            fields.forEach(field => {
+                field.removeEventListener("mouseover", mouseoverHandler);
+                field.removeEventListener("mouseout", mouseoutHandler);
+            });
+            resolve();
+        };
+        
+        const mouseoutHandler = () => {
+            fields.forEach(fieldToChange => {
+                fieldToChange.style.backgroundColor = "#124459";
+            });
+        };
+        
+        fields.forEach(field => {
+            field.addEventListener("mouseover", mouseoverHandler);
+            field.addEventListener("click", clickHandler);
+            field.addEventListener("mouseout", mouseoutHandler);
+        });
     });
 }
 
-function highlightPotentialShip(fields, field, length) {
 
-    field.addEventListener("mouseover", () => {
-    if (isHorizontal) {
-            for (let i = 0; i < length; i++) {
-                console.log(length);
-                fields.forEach(fieldToChange => {
-                    if (fieldToChange.dataset.positionx === field.dataset.positionx 
-                        && parseInt(fieldToChange.dataset.positiony) === parseInt(field.dataset.positiony) + i) {
-                        fieldToChange.style.backgroundColor = "#EFF6E0";
-                    }
-                });
-            }
-        } else {
-            for (let i = 0; i < length; i++) {
-                fields.forEach(fieldToChange => {
-                    if (fieldToChange.dataset.positiony === field.dataset.positiony 
-                        && parseInt(fieldToChange.dataset.positionx) === parseInt(field.dataset.positionx) + i) {
-                        fieldToChange.style.backgroundColor = "#EFF6E0";
-                    }
-                });
-            }
-        }
-        field.addEventListener("click", () => {
-            return;
-        });
-    });
+function highlightPotentialShip(field, length) {
+    console.log("highlight");
+
+ 
     
     return;
 }

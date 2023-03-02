@@ -46,6 +46,7 @@ async function placeShips() {
 
 function placeShip(type, length) {
     const text = document.querySelector(".instruction-text");
+    let highlightColor = "#EFF6E0";
     return new Promise((resolve, reject) => {
         text.textContent = "Place your " + type;
 
@@ -54,19 +55,30 @@ function placeShip(type, length) {
         const mouseoverHandler = (event) => {
             if (isHorizontal) {
                 for (let i = 0; i < length; i++) {
+                    console.log(parseInt(event.target.dataset.positiony) + length)
+                        if (parseInt(event.target.dataset.positiony) + length > 11) {
+                            highlightColor = "#FF0000";
+                        } else {
+                            highlightColor = "#EFF6E0";
+                        }
                     fields.forEach(fieldToChange => {
                         if (fieldToChange.dataset.positionx === event.target.dataset.positionx 
                             && parseInt(fieldToChange.dataset.positiony) === parseInt(event.target.dataset.positiony) + i) {
-                            fieldToChange.style.backgroundColor = "#EFF6E0";
+                            fieldToChange.style.backgroundColor = highlightColor;
                         }
                     });
                 }
             } else {
                 for (let i = 0; i < length; i++) {
+                    if (parseInt(event.target.dataset.positionx) + length > 11) {
+                        highlightColor = "#FF0000";
+                    } else {
+                        highlightColor = "#EFF6E0";
+                    }
                     fields.forEach(fieldToChange => {
                         if (fieldToChange.dataset.positiony === event.target.dataset.positiony 
                             && parseInt(fieldToChange.dataset.positionx) === parseInt(event.target.dataset.positionx) + i) {
-                            fieldToChange.style.backgroundColor = "#EFF6E0";
+                            fieldToChange.style.backgroundColor = highlightColor;
                         }
                     });
                 }

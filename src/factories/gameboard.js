@@ -24,6 +24,7 @@ const Gameboard = () => {
                 board[row + i][col] = ship;
             }
         }
+        return true;
     }
 
     function receiveAttack(position) {

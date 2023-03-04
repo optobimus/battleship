@@ -141,12 +141,13 @@ function highlightPotentialShip(event, length, definitive) {
     return currentShip;
 }
 
-function loadMainGame(gameboard) {
+function loadMainGame(name, gameboard) {
     const main = document.querySelector(".main");
     main.innerHTML = "";
 
     const instructionBox = document.createElement("h1");
     instructionBox.classList.add("instruction-box");
+    instructionBox.textContent = name + ", it is your turn to fire!";
 
     const playArea = document.createElement("div");
     playArea.classList.add("play-area");

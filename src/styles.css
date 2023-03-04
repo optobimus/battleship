@@ -57,6 +57,9 @@ body {
     background-color: #EFF6E0;
 }
 
+.instruction-box {
+}
+
 .play-area {
     display: flex;
     align-items: center;

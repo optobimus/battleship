@@ -12,6 +12,8 @@ const Player = (username) => {
         }
     }
 
+    const getGameboard = () => gameboard;
+
     return { getName, attack }
 }
 

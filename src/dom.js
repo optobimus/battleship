@@ -1,8 +1,12 @@
+import Player from "./factories/player";
+import Gameboard from "./factories/gameboard";
+import { initialize } from "./index";
+
+
 function createGame() {
     const main = document.querySelector(".main");
     main.innerHTML = "";
     createInitLayout(main);
-    placeShips();
 }
 
 function createInitLayout(main) {
@@ -40,97 +44,36 @@ async function placeShips() {
     await placeShip("Submarine", 3);
     await placeShip("Patrol Boat", 2);
 
-    loadMainGame();
-
 }
 
 function placeShip(type, length) {
     const text = document.querySelector(".instruction-text");
-    let highlightColor = "#EFF6E0";
     return new Promise((resolve, reject) => {
         text.textContent = "Place your " + type;
 
         const fields = document.querySelectorAll(".field");
 
         const mouseoverHandler = (event) => {
-            if (isHorizontal) {
-                for (let i = 0; i < length; i++) {
-                    console.log(parseInt(event.target.dataset.positiony) + length)
-                        if (parseInt(event.target.dataset.positiony) + length > 11) {
-                            highlightColor = "#FF0000";
-                        } else {
-                            highlightColor = "#EFF6E0";
-                        }
-                    fields.forEach(fieldToChange => {
-                        if (fieldToChange.dataset.positionx === event.target.dataset.positionx 
-                            && parseInt(fieldToChange.dataset.positiony) === parseInt(event.target.dataset.positiony) + i) {
-                            fieldToChange.style.backgroundColor = highlightColor;
-                        }
-                    });
-                }
-            } else {
-                for (let i = 0; i < length; i++) {
-                    if (parseInt(event.target.dataset.positionx) + length > 11) {
-                        highlightColor = "#FF0000";
-                    } else {
-                        highlightColor = "#EFF6E0";
-                    }
-                    fields.forEach(fieldToChange => {
-                        if (fieldToChange.dataset.positiony === event.target.dataset.positiony 
-                            && parseInt(fieldToChange.dataset.positionx) === parseInt(event.target.dataset.positionx) + i) {
-                            fieldToChange.style.backgroundColor = highlightColor;
-                        }
-                    });
-                }
-            }
+            highlightPotentialShip(event, length, false);
         };
         
         const clickHandler = (event) => {
-
-
-            if (isHorizontal) {
-                for (let i = 0; i < length; i++) {
-                    console.log(parseInt(event.target.dataset.positiony) + length)
-                        if (parseInt(event.target.dataset.positiony) + length > 11) {
-                            highlightColor = "#FF0000";
-                        } else {
-                            highlightColor = "#EFF6E0";
-                        }
-                    fields.forEach(fieldToChange => {
-                        if (fieldToChange.dataset.positionx === event.target.dataset.positionx 
-                            && parseInt(fieldToChange.dataset.positiony) === parseInt(event.target.dataset.positiony) + i) {
-                            fieldToChange.style.backgroundColor = highlightColor;
-                            isPlaced.push(fieldToChange);
-                        }
-                    });
-                }
-            } else {
-                for (let i = 0; i < length; i++) {
-                    if (parseInt(event.target.dataset.positionx) + length > 11) {
-                        highlightColor = "#FF0000";
-                    } else {
-                        highlightColor = "#EFF6E0";
-                    }
-                    fields.forEach(fieldToChange => {
-                        if (fieldToChange.dataset.positiony === event.target.dataset.positiony 
-                            && parseInt(fieldToChange.dataset.positionx) === parseInt(event.target.dataset.positionx) + i) {
-                            fieldToChange.style.backgroundColor = highlightColor;
-                            isPlaced.push(fieldToChange);
-                        }
-                    });
-                }
+            let currentShip = null;
+            if (!isPlaced.includes(event.target)) {
+                currentShip = highlightPotentialShip(event, length, true);
             }
 
-            fields.forEach(field => {
-                field.removeEventListener("mouseover", mouseoverHandler);
-                field.removeEventListener("mouseout", mouseoutHandler);
-                field.removeEventListener("click", clickHandler);
-            });
+            console.log(currentShip);
+            if (highlightColor !== "#FF0000") {
+                fields.forEach(field => {
+                    field.removeEventListener("mouseover", mouseoverHandler);
+                    field.removeEventListener("mouseout", mouseoutHandler);
+                    field.removeEventListener("click", clickHandler);
+                });
 
+                resolve();
+            }
 
-            
-
-            resolve();
         };
         
         const mouseoutHandler = () => {
@@ -149,12 +92,47 @@ function placeShip(type, length) {
 }
 
 
-function highlightPotentialShip(field, length) {
-    console.log("highlight");
-
- 
+function highlightPotentialShip(event, length, definitive) {
+    let currentShip = [];
+    const fields = document.querySelectorAll(".field");
+    if (isHorizontal) {
+        for (let i = 0; i < length; i++) {
+                if (parseInt(event.target.dataset.positiony) + length > 11) {
+                    highlightColor = "#FF0000";
+                } else {
+                    highlightColor = "#EFF6E0";
+                }
+            fields.forEach(fieldToChange => {
+                if (fieldToChange.dataset.positionx === event.target.dataset.positionx 
+                    && parseInt(fieldToChange.dataset.positiony) === parseInt(event.target.dataset.positiony) + i) {
+                    if (!isPlaced.includes(fieldToChange))
+                        fieldToChange.style.backgroundColor = highlightColor;
+                    if (definitive && highlightColor !== "#FF0000")
+                        isPlaced.push(fieldToChange);
+                        currentShip.push(fieldToChange);
+                }
+            });
+        }
+    } else {
+        for (let i = 0; i < length; i++) {
+            if (parseInt(event.target.dataset.positionx) + length > 11) {
+                highlightColor = "#FF0000";
+            } else {
+                highlightColor = "#EFF6E0";
+            }
+            fields.forEach(fieldToChange => {
+                if (fieldToChange.dataset.positiony === event.target.dataset.positiony 
+                    && parseInt(fieldToChange.dataset.positionx) === parseInt(event.target.dataset.positionx) + i) {
+                    if (!isPlaced.includes(fieldToChange))
+                        fieldToChange.style.backgroundColor = highlightColor;
+                    if (definitive && highlightColor !== "#FF0000")
+                        isPlaced.push(fieldToChange);
+                }
+            });
+        }
+    }
     
-    return;
+    return currentShip;
 }
 
 function loadMainGame() {
@@ -222,5 +200,6 @@ function checkIsPlaced(field) {
 
 let isHorizontal = true;
 const isPlaced = [];
+let highlightColor;
 
-export { createGame, placeShips, placeShip }
+export { createGame, placeShips, placeShip, loadMainGame }

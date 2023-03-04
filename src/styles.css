@@ -32,8 +32,8 @@ body {
 }
 
 .active-game-board {
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
@@ -51,7 +51,7 @@ body {
 .play-area {
     display: flex;
     align-items: center;
-    gap: 100px;
+    gap: 150px;
 }
 
 .player-area, .computer-area {

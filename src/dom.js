@@ -86,16 +86,57 @@ function placeShip(type, length) {
         };
         
         const clickHandler = (event) => {
+
+
+            if (isHorizontal) {
+                for (let i = 0; i < length; i++) {
+                    console.log(parseInt(event.target.dataset.positiony) + length)
+                        if (parseInt(event.target.dataset.positiony) + length > 11) {
+                            highlightColor = "#FF0000";
+                        } else {
+                            highlightColor = "#EFF6E0";
+                        }
+                    fields.forEach(fieldToChange => {
+                        if (fieldToChange.dataset.positionx === event.target.dataset.positionx 
+                            && parseInt(fieldToChange.dataset.positiony) === parseInt(event.target.dataset.positiony) + i) {
+                            fieldToChange.style.backgroundColor = highlightColor;
+                            isPlaced.push(fieldToChange);
+                        }
+                    });
+                }
+            } else {
+                for (let i = 0; i < length; i++) {
+                    if (parseInt(event.target.dataset.positionx) + length > 11) {
+                        highlightColor = "#FF0000";
+                    } else {
+                        highlightColor = "#EFF6E0";
+                    }
+                    fields.forEach(fieldToChange => {
+                        if (fieldToChange.dataset.positiony === event.target.dataset.positiony 
+                            && parseInt(fieldToChange.dataset.positionx) === parseInt(event.target.dataset.positionx) + i) {
+                            fieldToChange.style.backgroundColor = highlightColor;
+                            isPlaced.push(fieldToChange);
+                        }
+                    });
+                }
+            }
+
             fields.forEach(field => {
                 field.removeEventListener("mouseover", mouseoverHandler);
                 field.removeEventListener("mouseout", mouseoutHandler);
+                field.removeEventListener("click", clickHandler);
             });
+
+
+            
+
             resolve();
         };
         
         const mouseoutHandler = () => {
             fields.forEach(fieldToChange => {
-                fieldToChange.style.backgroundColor = "#124459";
+                if(!checkIsPlaced(fieldToChange)) 
+                    fieldToChange.style.backgroundColor = "#124459";
             });
         };
         
@@ -172,7 +213,14 @@ function createBoard(board) {
     }
 }
 
+function checkIsPlaced(field) {
+    if (isPlaced.includes(field))
+        return true;
+    return false;
+}
+
 
 let isHorizontal = true;
+const isPlaced = [];
 
 export { createGame, placeShips, placeShip }

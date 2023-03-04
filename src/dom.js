@@ -71,7 +71,7 @@ function placeShip(type, length) {
                     field.removeEventListener("click", clickHandler);
                 });
 
-                resolve();
+                resolve(currentShip);
             }
 
         };
@@ -93,9 +93,13 @@ function placeShip(type, length) {
 
 
 function highlightPotentialShip(event, length, definitive) {
-    let currentShip = [];
+    let currentShip = {
+        position: [],
+        isHorizontal: true
+    }
     const fields = document.querySelectorAll(".field");
     if (isHorizontal) {
+        currentShip.isHorizontal = true;
         for (let i = 0; i < length; i++) {
                 if (parseInt(event.target.dataset.positiony) + length > 11) {
                     highlightColor = "#FF0000";
@@ -109,11 +113,12 @@ function highlightPotentialShip(event, length, definitive) {
                         fieldToChange.style.backgroundColor = highlightColor;
                     if (definitive && highlightColor !== "#FF0000")
                         isPlaced.push(fieldToChange);
-                        currentShip.push(fieldToChange);
+                        currentShip.position.push(fieldToChange);
                 }
             });
         }
     } else {
+        currentShip.isHorizontal = false;
         for (let i = 0; i < length; i++) {
             if (parseInt(event.target.dataset.positionx) + length > 11) {
                 highlightColor = "#FF0000";
@@ -127,6 +132,7 @@ function highlightPotentialShip(event, length, definitive) {
                         fieldToChange.style.backgroundColor = highlightColor;
                     if (definitive && highlightColor !== "#FF0000")
                         isPlaced.push(fieldToChange);
+                        currentShip.position.push(fieldToChange);
                 }
             });
         }

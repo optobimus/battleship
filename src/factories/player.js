@@ -14,7 +14,7 @@ const Player = (username) => {
 
     const getGameboard = () => gameboard;
 
-    return { getName, attack }
+    return { getName, attack, getGameboard}
 }
 
 export default Player;

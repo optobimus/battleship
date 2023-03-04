@@ -10,17 +10,25 @@ async function initialize(name) {
     const player1 = Player(name);
     const computer = Player("Computer");
 
-    const domToLogic = (currentShip) => {
-        player1.getGameboard().placeShip(Ship(5),4 ,true)
-    }
+    let currentShip = null;
 
     createGame();
 
-    await placeShip("Carrier", 5);
-    await placeShip("Battleship", 4);
-    await placeShip("Destroyer", 3);
-    await placeShip("Submarine", 3);
-    await placeShip("Patrol Boat", 2);
+    currentShip = await placeShip("Carrier", 5).then();
+    player1.getGameboard().placeShip(Ship(5), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+
+    currentShip = await placeShip("Battleship", 4).then();
+    player1.getGameboard().placeShip(Ship(4), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+
+    currentShip = await placeShip("Destroyer", 3).then();
+    player1.getGameboard().placeShip(Ship(3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+
+    currentShip = await placeShip("Submarine", 3).then();
+    player1.getGameboard().placeShip(Ship(3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+
+    currentShip = await placeShip("Patrol Boat", 2).then();
+    player1.getGameboard().placeShip(Ship(2), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+
     loadMainGame();
 }
 

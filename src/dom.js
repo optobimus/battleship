@@ -141,7 +141,7 @@ function highlightPotentialShip(event, length, definitive) {
     return currentShip;
 }
 
-function loadMainGame() {
+function loadMainGame(gameboard) {
     const main = document.querySelector(".main");
     main.innerHTML = "";
 
@@ -174,6 +174,20 @@ function loadMainGame() {
 
     createBoard(playerBoard);
     createBoard(computerBoard);
+
+    const playerFields = playerBoard.querySelectorAll(".field");
+
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            if (gameboard.getBoard()[i][j] !== null) {
+                playerFields.forEach(field => {
+                    if (parseInt(field.dataset.positionx) === i && parseInt(field.dataset.positiony) === j) {
+                        field.style.backgroundColor = "#EFF6E0";
+                    }
+                })
+            }
+        }
+    }
 
     playerArea.appendChild(playerText);
     playerArea.appendChild(playerBoard);

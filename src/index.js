@@ -29,7 +29,7 @@ async function initialize(name) {
     currentShip = await placeShip("Patrol Boat", 2).then();
     player1.getGameboard().placeShip(Ship(2), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
-    loadMainGame();
+    loadMainGame(player1.getGameboard());
 }
 
 const startButton = document.querySelector(".start-button");

@@ -258,9 +258,15 @@ function updateGameBoard(player) {
                 fields.forEach(field => {
                     if (parseInt(field.dataset.positionx) === i && parseInt(field.dataset.positiony) === j && !field.firstChild) {
                         field.appendChild(createCircle());
+                        if (gameBoard.getBoard()[i][j] !== null) {
+                            console.log("HIT");
+                            field.style.backgroundColor = "#FF0000";
+                        } 
                     }
+                      
                 })
             }
+            
         }
     }
 }

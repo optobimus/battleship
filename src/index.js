@@ -65,10 +65,10 @@ function playerTurn(computer, fields) {
 
 function computerTurn(player) {
     return new Promise((resolve, reject) => {
-        player.getGameboard().receiveAttack({ row: generateRandomNumber(), col: generateRandomNumber() });
         setTimeout(() => {
+            player.getGameboard().receiveAttack({ row: generateRandomNumber(), col: generateRandomNumber() });
             resolve();
-        }, 3000);
+        }, 2000);
     });
 }
 

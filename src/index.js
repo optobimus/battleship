@@ -43,6 +43,7 @@ async function playGame(player, computer) {
     while (!gameEnd()) {
         await playerTurn(computer, computerFields);
         updateGameBoard(computer);
+        console.log(computer.getGameboard().getBoard());
         await computerTurn(player);
         updateGameBoard(player);
     }
@@ -79,15 +80,15 @@ function gameEnd() {
 function createComputerShips(computer) {
     const board = computer.getGameboard();
 
-    callFunctionUntilTrue(() => board.placeShip(Ship(5), { row: generateRandomPlacement(5), col: generateRandomPlacement(5) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(4), { row: generateRandomPlacement(4), col: generateRandomPlacement(4) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(2), { row: generateRandomPlacement(2), col: generateRandomPlacement(2) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship("Carrier", 5), { row: generateRandomPlacement(5), col: generateRandomPlacement(5) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship("Battleship", 4), { row: generateRandomPlacement(4), col: generateRandomPlacement(4) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship("Destroyer", 3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship("Submarine", 3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship("Patrol Boat", 2), { row: generateRandomPlacement(2), col: generateRandomPlacement(2) }, getRandomBoolean()));
 }
 
 function generateRandomPlacement(length) {
-    return Math.floor(Math.random() * (10 - length)) + 1;
+    return Math.floor(Math.random() * (10 - length));
 }
 
 function generateRandomNumber() {

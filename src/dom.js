@@ -251,7 +251,6 @@ function updateGameBoard(player) {
         domBoard = document.querySelector(".computer-board");
     }
     const fields = domBoard.querySelectorAll(".field");
-    console.log(gameBoard.getHitBoard())
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
             if (gameBoard.getHitBoard()[i][j]) {
@@ -259,7 +258,6 @@ function updateGameBoard(player) {
                     if (parseInt(field.dataset.positionx) === i && parseInt(field.dataset.positiony) === j && !field.firstChild) {
                         field.appendChild(createCircle());
                         if (gameBoard.getBoard()[i][j] !== null) {
-                            console.log("HIT");
                             field.style.backgroundColor = "#FF0000";
                         } 
                     }

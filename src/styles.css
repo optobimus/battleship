@@ -53,7 +53,7 @@ body {
     border: 1px solid #EFF6E0;
 }
 
-.field:hover {
+.computer-board .field:hover {
     background-color: #EFF6E0;
 }
 

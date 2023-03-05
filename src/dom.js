@@ -95,7 +95,7 @@ function highlightPotentialShip(event, length, definitive) {
     let currentShip = {
         position: [],
         isHorizontal: true
-    }
+    };
     let checkFields = [];
     const fields = document.querySelectorAll(".field");
     if (isHorizontal) {
@@ -115,8 +115,10 @@ function highlightPotentialShip(event, length, definitive) {
             if (!definitive) {
                 if (parseInt(event.target.dataset.positiony) + length > 11 || checkFields.some(field => isPlaced.includes(field))) {
                     highlightColor = "#FF0000";
+                    event.target.style.cursor = "not-allowed";
                 } else {
                     highlightColor = "#EFF6E0";
+                    event.target.style.cursor = "default";
                 }
             }
             fields.forEach(fieldToChange => {
@@ -147,8 +149,10 @@ function highlightPotentialShip(event, length, definitive) {
             if (!definitive) {
                 if (parseInt(event.target.dataset.positionx) + length > 11 || checkFields.some(field => isPlaced.includes(field))) {
                     highlightColor = "#FF0000";
+                    event.target.style.cursor = "not-allowed";
                 } else {
                     highlightColor = "#EFF6E0";
+                    event.target.style.cursor = "default";
                 }
             }
             fields.forEach(fieldToChange => {
@@ -227,8 +231,8 @@ function loadMainGame(name, gameboard) {
 }
 
 function createBoard(board) {
-    for (let i = 1; i <= 10; i++){
-        for (let j = 1; j <= 10; j++) {
+    for (let i = 0; i < 10; i++){
+        for (let j = 0; j < 10; j++) {
             const field = document.createElement("div");
             field.classList.add("field");
             field.setAttribute("data-positionX", i);
@@ -237,6 +241,49 @@ function createBoard(board) {
         }
     }
 }
+
+function updateGameBoard(player) {
+    let domBoard = null;
+    let gameBoard = player.getGameboard();
+    if (player.getName() !== "Computer") {
+        domBoard = document.querySelector(".player-board");
+    } else {
+        domBoard = document.querySelector(".computer-board");
+    }
+    const fields = domBoard.querySelectorAll(".field");
+    console.log(gameBoard.getHitBoard())
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            if (gameBoard.getHitBoard()[i][j]) {
+                fields.forEach(field => {
+                    if (parseInt(field.dataset.positionx) === i && parseInt(field.dataset.positiony) === j && !field.firstChild) {
+                        field.appendChild(createCircle());
+                    }
+                })
+            }
+        }
+    }
+}
+
+function createCircle() {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("xmlns", svgNS);
+    svg.style.display = "block";
+
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", "50");
+    circle.setAttribute("cy", "50");
+    circle.setAttribute("r", "25");
+    circle.setAttribute("fill", "#EFF6E0");
+
+    svg.appendChild(circle);
+    
+    return svg;
+
+}
+
 
 function checkIsPlaced(field) {
     if (isPlaced.includes(field))
@@ -249,4 +296,4 @@ let isHorizontal = true;
 const isPlaced = [];
 let highlightColor;
 
-export { createGame, placeShips, placeShipDOM, loadMainGame }
+export { createGame, placeShips, placeShipDOM, loadMainGame, updateGameBoard }

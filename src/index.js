@@ -2,7 +2,7 @@ import css from './styles.css';
 import Player from './factories/player';
 import Gameboard from './factories/gameboard';
 import Ship from './factories/ship';
-import { createGame, placeShips, placeShipDOM, loadMainGame }  from './dom'
+import { createGame, placeShips, placeShipDOM, loadMainGame, updateGameBoard }  from './dom'
 
 
 async function initialize(name) {
@@ -15,37 +15,83 @@ async function initialize(name) {
     createGame();
 
     currentShip = await placeShipDOM("Carrier", 5).then();
-    player1.getGameboard().placeShip(Ship(5), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    player1.getGameboard().placeShip(Ship("Carrier", 5), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
     currentShip = await placeShipDOM("Battleship", 4).then();
-    player1.getGameboard().placeShip(Ship(4), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    player1.getGameboard().placeShip(Ship("Battleship", 4), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
     currentShip = await placeShipDOM("Destroyer", 3).then();
-    player1.getGameboard().placeShip(Ship(3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    player1.getGameboard().placeShip(Ship("Destroyer", 3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
     currentShip = await placeShipDOM("Submarine", 3).then();
-    player1.getGameboard().placeShip(Ship(3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    player1.getGameboard().placeShip(Ship("Submarine", 3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
     currentShip = await placeShipDOM("Patrol Boat", 2).then();
-    player1.getGameboard().placeShip(Ship(2), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    player1.getGameboard().placeShip(Ship("Patrol Boat", 2), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
     createComputerShips(computer);
 
     loadMainGame(player1.getName(), player1.getGameboard());
+
+    playGame(player1, computer);
+}
+
+async function playGame(player, computer) {
+    const computerBoard = document.querySelector(".computer-board");
+    const computerFields = computerBoard.querySelectorAll(".field");
+
+    while (!gameEnd()) {
+        await playerTurn(computer, computerFields);
+        updateGameBoard(computer);
+        await computerTurn(player);
+        updateGameBoard(player);
+    }
+    
+}
+
+function playerTurn(computer, fields) {
+    return new Promise((resolve, reject) => {
+        fields.forEach(field => {
+            field.addEventListener("click", (e) => {
+                computer.getGameboard().receiveAttack({ row: parseInt(field.dataset.positionx), col: parseInt(field.dataset.positiony) });
+
+
+                resolve();
+            })
+        })
+    });
+    
+}
+
+function computerTurn(player) {
+    return new Promise((resolve, reject) => {
+        player.getGameboard().receiveAttack({ row: generateRandomNumber(), col: generateRandomNumber() });
+        setTimeout(() => {
+            resolve();
+        }, 3000);
+    });
+}
+
+function gameEnd() {
+
 }
 
 function createComputerShips(computer) {
     const board = computer.getGameboard();
 
-    callFunctionUntilTrue(() => board.placeShip(Ship(5), { row: generateRandomNumber(5), col: generateRandomNumber(5) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(4), { row: generateRandomNumber(4), col: generateRandomNumber(4) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(3), { row: generateRandomNumber(3), col: generateRandomNumber(3) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(3), { row: generateRandomNumber(3), col: generateRandomNumber(3) }, getRandomBoolean()));
-    callFunctionUntilTrue(() => board.placeShip(Ship(2), { row: generateRandomNumber(2), col: generateRandomNumber(2) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship(5), { row: generateRandomPlacement(5), col: generateRandomPlacement(5) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship(4), { row: generateRandomPlacement(4), col: generateRandomPlacement(4) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship(3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship(3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
+    callFunctionUntilTrue(() => board.placeShip(Ship(2), { row: generateRandomPlacement(2), col: generateRandomPlacement(2) }, getRandomBoolean()));
 }
 
-function generateRandomNumber(length) {
-    return Math.floor(Math.random() * (11 - length)) + 1;
+function generateRandomPlacement(length) {
+    return Math.floor(Math.random() * (10 - length)) + 1;
+}
+
+function generateRandomNumber() {
+    return Math.floor(Math.random() * 10);
 }
 
 function getRandomBoolean() {

@@ -1,6 +1,6 @@
 import Ship from '../src/factories/ship'
 
-let testSubmarine = new Ship(3);
+let testSubmarine = new Ship("HAAH", 3);
 
 test('accepts a hit', () => {
     testSubmarine.hit();

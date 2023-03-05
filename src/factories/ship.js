@@ -1,5 +1,6 @@
-const Ship = (length) => {
+const Ship = (name, length) => {
     let hits = 0, sunk = false;
+    const getName = () => name;
     const getLength = () => length;
     const getHits = () => hits;
 

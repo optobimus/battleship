@@ -179,6 +179,9 @@ function loadMainGame(name, gameboard) {
     instructionBox.classList.add("instruction-box");
     instructionBox.textContent = name + ", it is your turn to fire!";
 
+    const hitTextBox = document.createElement("h2");
+    hitTextBox.classList.add("hit-text");
+
     const playArea = document.createElement("div");
     playArea.classList.add("play-area");
 
@@ -227,6 +230,7 @@ function loadMainGame(name, gameboard) {
     playArea.appendChild(playerArea);
     playArea.appendChild(computerArea);
     main.appendChild(instructionBox);
+    main.appendChild(hitTextBox);
     main.appendChild(playArea);
 }
 
@@ -259,14 +263,37 @@ function updateGameBoard(player) {
                         field.appendChild(createCircle());
                         if (gameBoard.getBoard()[i][j] !== null) {
                             field.style.backgroundColor = "#FF0000";
-                        } 
+                            updateGameText(player, true);
+                        } else {
+                            updateGameText(player, false);
+
+                        }
                     }
                       
                 })
-            }
-            
+            } 
         }
     }
+}
+
+function updateGameText(player, hit) {
+    const hitText = document.querySelector(".hit-text");
+    const textBox = document.querySelector(".instruction-box");
+
+    if (hit) {
+        hitText.textContent = "It's a hit!";
+    
+        setTimeout(() => {
+            hitText.textContent = "";
+        }, 1500);
+    }
+    
+    if (player.getName() !== "Computer") {
+        textBox.textContent = player.getName() + ", it is your turn to fire!";
+    } else {
+        textBox.textContent = "The opponent is aiming...";
+    }
+
 }
 
 function createCircle() {

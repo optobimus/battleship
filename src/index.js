@@ -40,7 +40,7 @@ async function playGame(player, computer) {
     const computerBoard = document.querySelector(".computer-board");
     const computerFields = computerBoard.querySelectorAll(".field");
 
-    while (!gameEnd()) {
+    while (!gameEnd(player, computer)) {
         await playerTurn(computer, computerFields);
         updateGameBoard(computer);
         console.log(computer.getGameboard().getBoard());

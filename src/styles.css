@@ -74,6 +74,11 @@ body {
     gap: 20px;
 }
 
+.hit-text {
+    margin: 0;
+    height: 35px;
+}
+
 
 input[type="text"] {
   border: 2px solid #ccc;

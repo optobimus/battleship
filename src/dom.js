@@ -276,6 +276,7 @@ function updateGameText(player, hit) {
         ships.forEach(ship => {
             if (ship.isSunk()) {
                 sunkenShip = true;
+                changeShipColor(player, ship);
                 if (player.getName() !== "Computer") {
                     hitText.textContent = "The computer sank your " + ship.getName() + "!";
                 } else {
@@ -316,6 +317,29 @@ function updateGameText(player, hit) {
         textBox.textContent = "The opponent is aiming...";
     }
     return;
+}
+
+function changeShipColor(player, ship) {
+    let domBoard = null;
+    let gameBoard = player.getGameboard();
+    if (player.getName() !== "Computer") {
+        domBoard = document.querySelector(".player-board");
+    } else {
+        domBoard = document.querySelector(".computer-board");
+    }
+    const fields = domBoard.querySelectorAll(".field");
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            fields.forEach(field => {
+                if (parseInt(field.dataset.positionx) === i && parseInt(field.dataset.positiony) === j) {
+                    if (gameBoard.getBoard()[i][j] === ship)
+                        field.style.backgroundColor = "#800000";
+                }
+                    
+            })
+        }
+    }
+
 }
 
 function createCircle() {

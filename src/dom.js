@@ -36,16 +36,6 @@ function createInitLayout(main) {
 
 }
 
-async function placeShips() {
- 
-    // await placeShip("Carrier", 5);
-    // await placeShip("Battleship", 4);
-    // await placeShip("Destroyer", 3);
-    // await placeShip("Submarine", 3);
-    // await placeShip("Patrol Boat", 2);
-
-}
-
 function placeShipDOM(type, length) {
     const text = document.querySelector(".instruction-text");
     return new Promise((resolve, reject) => {
@@ -113,7 +103,7 @@ function highlightPotentialShip(event, length, definitive) {
         for (let i = 0; i < length; i++) {
             
             if (!definitive) {
-                if (parseInt(event.target.dataset.positiony) + length > 11 || checkFields.some(field => isPlaced.includes(field))) {
+                if (parseInt(event.target.dataset.positiony) + length > 10 || checkFields.some(field => isPlaced.includes(field))) {
                     highlightColor = "#FF0000";
                     event.target.style.cursor = "not-allowed";
                 } else {
@@ -147,7 +137,7 @@ function highlightPotentialShip(event, length, definitive) {
         for (let i = 0; i < length; i++) {
 
             if (!definitive) {
-                if (parseInt(event.target.dataset.positionx) + length > 11 || checkFields.some(field => isPlaced.includes(field))) {
+                if (parseInt(event.target.dataset.positionx) + length > 10 || checkFields.some(field => isPlaced.includes(field))) {
                     highlightColor = "#FF0000";
                     event.target.style.cursor = "not-allowed";
                 } else {
@@ -279,13 +269,45 @@ function updateGameBoard(player) {
 function updateGameText(player, hit) {
     const hitText = document.querySelector(".hit-text");
     const textBox = document.querySelector(".instruction-box");
+    let sunkenShip = false;
 
     if (hit) {
-        hitText.textContent = "It's a hit!";
+        const ships = player.getGameboard().getShips();
+        ships.forEach(ship => {
+            if (ship.isSunk()) {
+                sunkenShip = true;
+                if (player.getName() !== "Computer") {
+                    hitText.textContent = "The computer sank your " + ship.getName() + "!";
+                } else {
+                    hitText.textContent = "You sank the opponents " + ship.getName() + "!";
+                }
+                player.getGameboard().removeShip(ship);
+                setTimeout(() => {
+                    hitText.textContent = "";
+                }, 4000);
+            }
+        })
+        
+        if (!sunkenShip) {
+            hitText.textContent = "It's a hit!";
+        
+            setTimeout(() => {
+                hitText.textContent = "";
+            }, 1500);
+        }
+    }
+
+
     
-        setTimeout(() => {
-            hitText.textContent = "";
-        }, 1500);
+
+    if (player.getGameboard().gameOver()) {
+        if (player.getName() !== "Computer") {
+            textBox.textContent = "Oh no! The computer wins!";
+        } else {
+            textBox.textContent = "Congratulations! You win!";
+        }
+        return;
+            
     }
     
     if (player.getName() !== "Computer") {
@@ -293,7 +315,7 @@ function updateGameText(player, hit) {
     } else {
         textBox.textContent = "The opponent is aiming...";
     }
-
+    return;
 }
 
 function createCircle() {
@@ -327,4 +349,4 @@ let isHorizontal = true;
 const isPlaced = [];
 let highlightColor;
 
-export { createGame, placeShips, placeShipDOM, loadMainGame, updateGameBoard }
+export { createGame, placeShipDOM, loadMainGame, updateGameBoard }

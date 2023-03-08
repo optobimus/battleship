@@ -2,7 +2,7 @@ import css from './styles.css';
 import Player from './factories/player';
 import Gameboard from './factories/gameboard';
 import Ship from './factories/ship';
-import { createGame, placeShips, placeShipDOM, loadMainGame, updateGameBoard }  from './dom'
+import { createGame, placeShipDOM, loadMainGame, updateGameBoard }  from './dom'
 
 
 async function initialize(name) {
@@ -40,7 +40,7 @@ async function playGame(player, computer) {
     const computerBoard = document.querySelector(".computer-board");
     const computerFields = computerBoard.querySelectorAll(".field");
 
-    while (!gameEnd(player, computer)) {
+    while (!returnWinner(player, computer)) {
         await playerTurn(computer, computerFields);
         updateGameBoard(computer);
         console.log(computer.getGameboard().getBoard());
@@ -73,8 +73,13 @@ function computerTurn(player) {
     });
 }
 
-function gameEnd() {
-
+function returnWinner(player, computer) {
+    if (player.getGameboard().gameOver()) {
+        return computer;
+    } else if (computer.getGameboard().gameOver()) {
+        return player;
+    }
+    return false;
 }
 
 function createComputerShips(computer) {
@@ -111,15 +116,24 @@ function callFunctionUntilTrue(func) {
 const startButton = document.querySelector(".start-button");
 startButton.addEventListener(("click"), (e) =>  {
     const name = document.querySelector(".name-field").value;
-    initialize(name);
-
+    if (name) {
+        initialize(name);
+    } else {
+        alert("Name is required");
+    }
 })
+
+
 
 const inputBox = document.querySelector(".name-field");
 document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && document.activeElement === inputBox) {
         const name = document.querySelector(".name-field").value;
-        initialize(name);
+        if (name) {
+            initialize(name);
+        } else {
+            alert("Name is required");
+        }
     }
 })
 

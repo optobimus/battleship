@@ -1,7 +1,7 @@
 const Gameboard = () => {
     const board = new Array(10).fill(null).map(() => new Array(10).fill(null));
     const hitBoard = new Array(10).fill(false).map(() => new Array(10).fill(false));
-    const ships = [];
+    let ships = [];
 
     let attacks = 0, missedAttacks = 0;
     function placeShip(ship, position, isHorizontal) {

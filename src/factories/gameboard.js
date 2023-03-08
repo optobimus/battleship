@@ -27,6 +27,10 @@ const Gameboard = () => {
         return true;
     }
 
+    function removeShip(ship) {
+        ships = ships.filter(obj => obj !== ship);
+    }
+
     function receiveAttack(position) {
         let { row, col } = position;
         if (board[row][col] !== null && hitBoard[row][col] === false) {
@@ -67,10 +71,11 @@ const Gameboard = () => {
         return true;
     }
 
+    const getShips = () => ships;
     const getBoard = () => board;
     const getHitBoard = () => hitBoard;
 
-    return { placeShip, receiveAttack, gameOver, getBoard, canPlaceShip, getHitBoard }
+    return { placeShip, removeShip, receiveAttack, gameOver, getBoard, canPlaceShip, getHitBoard, getShips }
 }
 
 export default Gameboard;

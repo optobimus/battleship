@@ -42,32 +42,35 @@ async function playGame(player, computer) {
 
     while (!returnWinner(player, computer)) {
         await playerTurn(computer, computerFields);
-        updateGameBoard(computer);
         console.log(computer.getGameboard().getBoard());
         await computerTurn(player);
-        updateGameBoard(player);
     }
+    return;
     
 }
 
 function playerTurn(computer, fields) {
     return new Promise((resolve, reject) => {
+        function handleClick(e) {
+            computer.getGameboard().receiveAttack({ row: parseInt(e.target.dataset.positionx), col: parseInt(e.target.dataset.positiony) });
+            updateGameBoard(computer);
+            fields.forEach(field => {
+                field.removeEventListener("click", handleClick);
+            });
+            resolve();
+        }
+        
         fields.forEach(field => {
-            field.addEventListener("click", (e) => {
-                computer.getGameboard().receiveAttack({ row: parseInt(field.dataset.positionx), col: parseInt(field.dataset.positiony) });
-
-
-                resolve();
-            })
-        })
+            field.addEventListener("click", handleClick)
+        });
     });
-    
 }
 
 function computerTurn(player) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             player.getGameboard().receiveAttack({ row: generateRandomNumber(), col: generateRandomNumber() });
+            updateGameBoard(player);
             resolve();
         }, 2000);
     });

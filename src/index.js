@@ -40,6 +40,7 @@ async function playGame(player, computer) {
     const computerBoard = document.querySelector(".computer-board");
     const computerFields = computerBoard.querySelectorAll(".field");
 
+
     while (!returnWinner(player, computer)) {
         await playerTurn(computer, computerFields);
         console.log(computer.getGameboard().getBoard());
@@ -68,12 +69,35 @@ function playerTurn(computer, fields) {
 
 function computerTurn(player) {
     return new Promise((resolve, reject) => {
+        let row, col;
         setTimeout(() => {
-            player.getGameboard().receiveAttack({ row: generateRandomNumber(), col: generateRandomNumber() });
+            if (previousComputerShotHit) {
+                do {
+                    ({ row, col } = generateRandomAdjacent(previousComputerHit));
+                } while (player.getGameboard().getHitBoard()[row][col] === true);
+            } else {
+                do {
+                    row = generateRandomNumber(), col = generateRandomNumber();
+                } while (player.getGameboard().getHitBoard()[row][col] === true);
+            }
+            player.getGameboard().receiveAttack({ row: row, col: col });
+            previousComputerHit = { row, col};
+            previousComputerShotHit = checkIfHit(player, { row, col });
             updateGameBoard(player);
             resolve();
         }, 2000);
     });
+}
+
+function checkIfHit(player, position) {
+    const { row, col } = position;
+    const gameBoard = player.getGameboard();
+    if (gameBoard.getBoard()[row][col] !== null) {
+        return true;
+    } else {
+        return false;
+
+    }
 }
 
 function returnWinner(player, computer) {
@@ -103,6 +127,31 @@ function generateRandomNumber() {
     return Math.floor(Math.random() * 10);
 }
 
+function generateRandomAdjacent(position) {
+    const { row, col } = position;
+    if (getRandomBoolean) {     // modify x position
+        let randomCol = null;
+        do {
+            if (getRandomBoolean) {
+                randomCol = col + 1;
+            } else {
+                randomCol = col - 1;
+            }
+        } while (randomCol > 9);
+        return { row: row, col: randomCol } 
+    } else {                    // modify y position
+        let randomRow = null;
+        do {
+            if (getRandomBoolean) {
+                randomRow = row + 1;
+            } else {
+                randomRow = row - 1;
+            }
+        } while (randomRow > 9);
+        return { row: randomRow, col: col } 
+    }
+}
+
 function getRandomBoolean() {
     return Math.random() >= 0.5;
 }
@@ -127,6 +176,7 @@ startButton.addEventListener(("click"), (e) =>  {
 })
 
 
+let previousComputerShotHit = false, previousComputerHit = {};
 
 const inputBox = document.querySelector(".name-field");
 document.addEventListener("keydown", (e) => {

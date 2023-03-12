@@ -3,6 +3,7 @@ import Player from './factories/player';
 import Gameboard from './factories/gameboard';
 import Ship from './factories/ship';
 import { createGame, placeShipDOM, loadMainGame, updateGameBoard }  from './dom'
+import { generateRandomNumber, generateRandomPlacement, generateRandomAdjacent, getRandomBoolean, callFunctionUntilTrue} from './helpers'
 
 
 async function initialize(name) {
@@ -136,51 +137,6 @@ function createComputerShips(computer) {
     callFunctionUntilTrue(() => board.placeShip(Ship("Destroyer", 3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
     callFunctionUntilTrue(() => board.placeShip(Ship("Submarine", 3), { row: generateRandomPlacement(3), col: generateRandomPlacement(3) }, getRandomBoolean()));
     callFunctionUntilTrue(() => board.placeShip(Ship("Patrol Boat", 2), { row: generateRandomPlacement(2), col: generateRandomPlacement(2) }, getRandomBoolean()));
-}
-
-function generateRandomPlacement(length) {
-    return Math.floor(Math.random() * (10 - length));
-}
-
-function generateRandomNumber() {
-    return Math.floor(Math.random() * 10);
-}
-
-function generateRandomAdjacent(position) {
-    const { row, col } = position;
-    if (getRandomBoolean()) {     // modify x position
-        let randomCol = null;
-        do {
-            if (getRandomBoolean()) {
-                randomCol = col + 1;
-            } else {
-                randomCol = col - 1;
-            }
-        } while (randomCol > 9 || randomCol < 0);
-        return { row: row, col: randomCol } 
-    } else {                    // modify y position
-        let randomRow = null;
-        do {
-            if (getRandomBoolean()) {
-                randomRow = row + 1;
-            } else {
-                randomRow = row - 1;
-            }
-        } while (randomRow > 9 || randomRow < 0);
-        return { row: randomRow, col: col } 
-    }
-}
-
-function getRandomBoolean() {
-    return Math.random() >= 0.5;
-}
-  
-function callFunctionUntilTrue(func) {
-    let result = false;
-    while (!result) {
-        result = func();
-    }
-    return result;
 }
 
 

@@ -71,9 +71,10 @@ function computerTurn(player) {
     return new Promise((resolve, reject) => {
         let row, col;
         setTimeout(() => {
-            if (previousComputerShotHit) {
+            if (previousComputerShotHit && !allAdjacentsHit(player, previousComputerHit)) {
                 do {
                     ({ row, col } = generateRandomAdjacent(previousComputerHit));
+
                 } while (player.getGameboard().getHitBoard()[row][col] === true);
             } else {
                 do {
@@ -85,7 +86,7 @@ function computerTurn(player) {
             previousComputerShotHit = checkIfHit(player, { row, col });
             updateGameBoard(player);
             resolve();
-        }, 2000);
+        }, 300);
     });
 }
 
@@ -98,6 +99,24 @@ function checkIfHit(player, position) {
         return false;
 
     }
+}
+
+function allAdjacentsHit(player, position) {
+    if (position === null) {
+        return false;
+    }
+    console.log(position);
+    const { row, col } = position;
+    const gameBoard = player.getGameboard();
+    for (let i = -1; i < 2; i++) {
+        if (i !== 0 && row+i < 10 && row+i >= 0 && col+i < 10 && col+i >= 0) {
+            if (gameBoard.getHitBoard()[row+i][col] !== undefined && !gameBoard.getHitBoard()[row+i][col])
+                return false;
+            if (gameBoard.getHitBoard()[row][col+i] !== undefined && !gameBoard.getHitBoard()[row][col+i])
+                return false;
+        }
+    }
+    return true;
 }
 
 function returnWinner(player, computer) {
@@ -129,25 +148,25 @@ function generateRandomNumber() {
 
 function generateRandomAdjacent(position) {
     const { row, col } = position;
-    if (getRandomBoolean) {     // modify x position
+    if (getRandomBoolean()) {     // modify x position
         let randomCol = null;
         do {
-            if (getRandomBoolean) {
+            if (getRandomBoolean()) {
                 randomCol = col + 1;
             } else {
                 randomCol = col - 1;
             }
-        } while (randomCol > 9);
+        } while (randomCol > 9 || randomCol < 0);
         return { row: row, col: randomCol } 
     } else {                    // modify y position
         let randomRow = null;
         do {
-            if (getRandomBoolean) {
+            if (getRandomBoolean()) {
                 randomRow = row + 1;
             } else {
                 randomRow = row - 1;
             }
-        } while (randomRow > 9);
+        } while (randomRow > 9 || randomRow < 0);
         return { row: randomRow, col: col } 
     }
 }
@@ -176,7 +195,7 @@ startButton.addEventListener(("click"), (e) =>  {
 })
 
 
-let previousComputerShotHit = false, previousComputerHit = {};
+let previousComputerShotHit = false, previousComputerHit = null;
 
 const inputBox = document.querySelector(".name-field");
 document.addEventListener("keydown", (e) => {

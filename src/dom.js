@@ -111,7 +111,7 @@ function highlightPotentialShip(event, length, definitive) {
                     event.target.style.cursor = "default";
                 }
             } else {
-                highlightColor = "#D8CFA4";
+                //highlightColor = "#D8CFA4";
             }
             fields.forEach(fieldToChange => {
                 if (fieldToChange.dataset.positionx === event.target.dataset.positionx 
@@ -147,7 +147,7 @@ function highlightPotentialShip(event, length, definitive) {
                     event.target.style.cursor = "default";
                 }
             } else {
-                highlightColor = "#D8CFA4";
+                //highlightColor = "#D8CFA4";
             }
             fields.forEach(fieldToChange => {
                 if (fieldToChange.dataset.positiony === event.target.dataset.positiony 

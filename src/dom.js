@@ -1,6 +1,5 @@
 import Player from "./factories/player";
 import Gameboard from "./factories/gameboard";
-import { initialize } from "./index";
 
 
 function createGame() {

@@ -15,20 +15,28 @@ async function initialize(name) {
 
     createGame();
 
-    currentShip = await placeShipDOM("Carrier", 5).then();
-    player1.getGameboard().placeShip(Ship("Carrier", 5), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    // currentShip = await placeShipDOM("Carrier", 5).then();
+    // player1.getGameboard().placeShip(Ship("Carrier", 5), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
-    currentShip = await placeShipDOM("Battleship", 4).then();
-    player1.getGameboard().placeShip(Ship("Battleship", 4), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    // currentShip = await placeShipDOM("Battleship", 4).then();
+    // player1.getGameboard().placeShip(Ship("Battleship", 4), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
-    currentShip = await placeShipDOM("Destroyer", 3).then();
-    player1.getGameboard().placeShip(Ship("Destroyer", 3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    // currentShip = await placeShipDOM("Destroyer", 3).then();
+    // player1.getGameboard().placeShip(Ship("Destroyer", 3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
-    currentShip = await placeShipDOM("Submarine", 3).then();
-    player1.getGameboard().placeShip(Ship("Submarine", 3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    // currentShip = await placeShipDOM("Submarine", 3).then();
+    // player1.getGameboard().placeShip(Ship("Submarine", 3), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
 
-    currentShip = await placeShipDOM("Patrol Boat", 2).then();
-    player1.getGameboard().placeShip(Ship("Patrol Boat", 2), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+    // currentShip = await placeShipDOM("Patrol Boat", 2).then();
+    // player1.getGameboard().placeShip(Ship("Patrol Boat", 2), { row: parseInt(currentShip.position[0].dataset.positionx), col: parseInt(currentShip.position[0].dataset.positiony) }, currentShip.isHorizontal);
+
+    const ships = [  { name: "Carrier", size: 5 },  { name: "Battleship", size: 4 },  { name: "Destroyer", size: 3 },  { name: "Submarine", size: 3 },  { name: "Patrol Boat", size: 2 },];
+
+    for (const ship of ships) {
+    const currentShip = await placeShipDOM(ship.name, ship.size);
+    const { positionx, positiony } = currentShip.position[0].dataset;
+    player1.getGameboard().placeShip(Ship(ship.name, ship.size), { row: parseInt(positionx), col: parseInt(positiony) }, currentShip.isHorizontal);
+    }
 
     createComputerShips(computer);
 
@@ -87,7 +95,7 @@ function computerTurn(player) {
             previousComputerShotHit = checkIfHit(player, { row, col });
             updateGameBoard(player);
             resolve();
-        }, 300);
+        }, 1500);
     });
 }
 
